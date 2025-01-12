@@ -1,37 +1,56 @@
-const todoModel = require('../models/todoModel');
+const Todo = require('../models/todoModel');
 
 module.exports = {
-    getAll: (req, res) => {
-        const tasks = todoModel.getAll();
-        res.json(tasks);
+    getAll: async (req, res) => {
+        try {
+            const tasks = await Todo.find();
+            res.json(tasks);
+        } catch (error) {
+            res.status(500).json({ error: 'Failed to fetch tasks' });
+        }
     },
-    getById: (req, res) => {
-        const id = parseInt(req.params.id, 10);
-        const task = todoModel.getById(id);
-
-        if (!task) return res.status(404).json({ error: 'Task not found' });
-        res.json(task);
+    getById: async (req, res) => {
+        try {
+            const task = await Todo.findById(req.params.id);
+            if (!task) return res.status(404).json({ error: 'Task not found' });
+            res.json(task);
+        } catch (error) {
+            res.status(500).json({ error: 'Failed to fetch task' });
+        }
     },
-    add: (req, res) => {
-        const { title, description } = req.body;
-        if (!title) return res.status(400).json({ error: 'Title is required' });
+    add: async (req, res) => {
+        try {
+            const { title, description } = req.body;
+            if (!title) return res.status(400).json({ error: 'Title is required' });
 
-        const newTask = todoModel.add({ title, description });
-        res.status(201).json(newTask);
+            const newTask = new Todo({ title, description });
+            await newTask.save();
+            res.status(201).json(newTask);
+        } catch (error) {
+            res.status(500).json({ error: 'Failed to create task' });
+        }
     },
-    update: (req, res) => {
-        const id = parseInt(req.params.id, 10);
-        const { title, description } = req.body;
-        const updatedTask = todoModel.update(id, { title, description });
-
-        if (!updatedTask) return res.status(404).json({ error: 'Task not found' });
-        res.json(updatedTask);
+    update: async (req, res) => {
+        try {
+            const { title, description } = req.body;
+            const updatedTask = await Todo.findByIdAndUpdate(
+                req.params.id,
+                { title, description },
+                { new: true, runValidators: true }
+            );
+            if (!updatedTask) return res.status(404).json({ error: 'Task not found' });
+            res.json(updatedTask);
+        } catch (error) {
+            res.status(500).json({ error: 'Failed to update task' });
+        }
     },
-    delete: (req, res) => {
-        const id = parseInt(req.params.id, 10);
-        const deleted = todoModel.delete(id);
-
-        if (!deleted) return res.status(404).json({ error: 'Task not found' });
-        res.status(204).send();
-    }
+    delete: async (req, res) => {
+        try {
+            const deletedTask = await Todo.findByIdAndDelete(req.params.id);
+            if (!deletedTask) return res.status(404).json({ error: 'Task not found' });
+            res.status(204).send();
+        } catch (error) {
+            res.status(500).json({ error: 'Failed to delete task' });
+        }
+    },
 };

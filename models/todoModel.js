@@ -1,6 +1,7 @@
-let todos = []; // In-memory storage for tasks
+const mongoose = require('mongoose');
+let todos = []; 
 
-module.exports = {
+const todoService = {
     getAll: () => todos,
     getById: (id) => todos.find((todo) => todo.id === id),
     add: (task) => {
@@ -24,3 +25,23 @@ module.exports = {
         return true;
     }
 };
+
+// Define To-Do schema
+const todoSchema = new mongoose.Schema({
+    title: {
+        type: String,
+        required: true,
+    },
+    description: {
+        type: String,
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
+});
+
+// Create To-Do model
+const Todo = mongoose.model('Todo', todoSchema);
+
+module.exports = { Todo, todoService };
