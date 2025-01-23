@@ -1,151 +1,56 @@
 {
-    "swagger": "2.0",
-    "info": {
-      "title": "To-Do List API",
-      "version": "1.0.0",
-      "description": "A professional To-Do API with Swagger"
-    },
-    "host": "localhost:3000",
-    "basePath": "/",
-    "schemes": ["http"],
-    "securityDefinitions": {
-      "Bearer": {
-        "type": "apiKey",
-        "name": "Authorization",
-        "in": "header"
-      }
-    },
-    "security": [
-      {
-        "Bearer": []
-      }
-    ],
-    "paths": {
-      "/todos": {
-        "get": {
-          "summary": "Retrieve all tasks",
-          "responses": {
-            "200": {
-              "description": "List of tasks",
-              "schema": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "id": { "type": "integer" },
-                    "title": { "type": "string" },
-                    "description": { "type": "string" }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "post": {
-          "summary": "Add a new task",
-          "parameters": [
-            {
-              "in": "body",
-              "name": "task",
-              "required": true,
-              "schema": {
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "To-Do App API",
+    "description": "API documentation for the To-Do application"
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "schemes": ["http"],
+  "paths": {
+    "/todos": {
+      "get": {
+        "summary": "Retrieve all to-dos",
+        "responses": {
+          "200": {
+            "description": "A list of to-dos",
+            "schema": {
+              "type": "array",
+              "items": {
                 "type": "object",
                 "properties": {
+                  "id": { "type": "string" },
                   "title": { "type": "string" },
                   "description": { "type": "string" }
-                },
-                "required": ["title"]
+                }
               }
-            }
-          ],
-          "responses": {
-            "201": {
-              "description": "Task created"
             }
           }
         }
       },
-      "/todos/{id}": {
-        "get": {
-          "summary": "Retrieve a task by ID",
-          "parameters": [
-            {
-              "in": "path",
-              "name": "id",
-              "type": "integer",
-              "required": true,
-              "description": "ID of the task to retrieve"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Task retrieved",
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "id": { "type": "integer" },
-                  "title": { "type": "string" },
-                  "description": { "type": "string" }
-                }
-              }
-            },
-            "404": {
-              "description": "Task not found"
+      "post": {
+        "summary": "Create a new to-do",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "to-do",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string" },
+                "description": { "type": "string" }
+              },
+              "required": ["title"]
             }
           }
-        },
-        "put": {
-          "summary": "Update a task",
-          "parameters": [
-            {
-              "in": "path",
-              "name": "id",
-              "type": "integer",
-              "required": true,
-              "description": "ID of the task to update"
-            },
-            {
-              "in": "body",
-              "name": "task",
-              "required": true,
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "title": { "type": "string" },
-                  "description": { "type": "string" }
-                }
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Task updated"
-            },
-            "404": {
-              "description": "Task not found"
-            }
-          }
-        },
-        "delete": {
-          "summary": "Delete a task",
-          "parameters": [
-            {
-              "in": "path",
-              "name": "id",
-              "type": "integer",
-              "required": true,
-              "description": "ID of the task to delete"
-            }
-          ],
-          "responses": {
-            "204": {
-              "description": "Task deleted"
-            },
-            "404": {
-              "description": "Task not found"
-            }
+        ],
+        "responses": {
+          "201": {
+            "description": "To-do created"
           }
         }
       }
     }
+  }
 }
